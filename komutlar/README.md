@@ -44,7 +44,6 @@ sudo wg-quick down wg0
 
 sudo wg-quick up client
 sudo wg-quick down client
-```bash
 ```
 Wireguard durumunu gösterir
 ```bash
