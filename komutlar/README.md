@@ -12,6 +12,7 @@ ip link set wwan0 up
 ```
 4G bağlantısı servis kontrolleri
 ```bash
+systemctl daemon-reload
 systemctl status 4g_connect.service
 systemctl restart 4g_connect.service
 systemctl stop 4g_connect.service
