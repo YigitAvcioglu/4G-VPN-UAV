@@ -1,7 +1,8 @@
 # 4G & Wireguard Kurulum ve Yönetim Rehberi
 
-Bu depo, sisteminizde 4G modem entegrasyonu, Wireguard VPN kurulumu ve sık kullanılan yönetim komutlarını hızlıca bulabilmeniz için hazırlanmıştır.
-
+4G LTE tabanlı bu haberleşme mimarisi, İHA ile yer kontrol istasyonu arasındaki mesafe kısıtını ortadan kaldırarak farklı fiziksel ağlarda bulunan sistemlerin WireGuard VPN üzerinden aynı sanal ağ içerisinde haberleşmesini sağlar.
+Bu haberleşme mimarisinde yer istasyonunda bulunan router, statik IP adresine sahip olup internet üzerinden erişilebilen tek noktayı oluşturur. İHA üzerindeki görev bilgisayarı(Jetson/Raspberry Pi), 4G modem/HAT üzerindeki sim kart aracılığıyla internete çıkarak WireGuard client bağlantısını bu statik IP adresine yönlendirir. Dış ağdan router'a ulaşan WireGuard trafiği, port yönlendirme (port forwarding) kuralları sayesinde yerel ağdaki WireGuard sunucusu olarak çalışan bilgisayara iletilir. Böylece CGNAT kaynaklı erişim kısıtlamaları aşılır ve İHA ile yer istasyonu arasında güvenli bir VPN tüneli oluşturulur. Tünelin kurulmasının ardından her iki sistem de aynı sanal ağ içerisinde yer alır ve internet üzerinden haberleşmelerine rağmen birbirleriyle yerel ağdaymış gibi doğrudan, güvenli ve kesintisiz şekilde veri alışverişi yapabilir.
+WireGuard sunucusuna bağlı olan yerel ağdaki diğer cihazlar(YKİ PC gibi) ise üzerinde WireGuard kurulu olmasa dahi, routerın yönlendirme ve ağ geçidi yapılandırmaları sayesinde VPN ağına erişebilir ve İHA üzerindeki clientlar ile doğrudan haberleşebilir. Bu sayede yerel ağdaki bilgisayarlar ile İHA arasında telemetri ve görüntü aktarımı işlemleri gerçekleştirilebilir.
 ---
 
 ## 🗺️ Hızlı Navigasyon
