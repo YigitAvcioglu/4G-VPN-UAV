@@ -1,41 +1,12 @@
-
-
-# 4G-VPN-UAV
+# 4G Cihazları Kurulumu
+---
 ## Jetson Orin Nano/NX - Sim7600G-H 4G Dongle Kurulumu
-
+---
 ### Gereklilikleri indirin
 ```bash
 sudo apt install -y build-essential linux-headers-$(uname -r) minicom udhcpc wget unzip iproute2 coreutils gawk grep
 ```
-
-### Kontrolleri yapın
-
-```bash
-sudo minicom -D /dev/ttyUSB2
-```
-
-Ağ modunu Otomatik yapar; 4G koparsa otomatik 3G'ye düşer
-```bash
-AT+CNMP=2   
-```
-Sinyal kalitesini sorgular (0-31 arası değer döner, 15+ üzeri idealdir)
-```bash
-AT+CSQ      
-```
-Şebeke kayıt durumunu kontrol eder (1=Kendi Şebekesi, 5=Roaming)
-```bash
-AT+CREG?
-```
-
-Aktif bağlı olunan operatör adını ve ağ tipini gösterir
-```bash
-AT+COPS?
-```
-Detaylı hücresel sistem, aktif frekans bandı ve sinyali gösterir
-```bash
-AT+CPSI?    
-```
-
+---
 ### Sürücüyü kurun
 ```bash
 
@@ -45,10 +16,10 @@ unzip Simcom_wwan.zip
 cd Simcom_wwan
 sudo make
 ```
-
+---
 ### Otomatik bağlantı scripti oluşturun
 ```bash
-sudo nano 4g_dongle_auto.sh
+sudo nano 4g_connect.sh
 ```
 Bunu dosyanın içine yapıştırın
 ```bash
@@ -106,11 +77,12 @@ udhcpc -i $INTERFACE -b -R 5
 
 echo "4G Dongle ile internete bağlanıldı"
 ```
-
+---
 ### Servis dosyası oluşturun
 ```bash
-sudo nano 4g_dongle_auto.service
+sudo nano 4g_connect.service
 ```
+Bunu dosyanın içine yapıştırın
 ```bash
 [Unit]
 Description=Hücresel Ağ Otomatik Bağlantı Servisi
@@ -119,40 +91,22 @@ Before=rc-local.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/4g_dongle_auto.sh
+ExecStart=/usr/local/bin/4g_connect.sh
 RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
 ```
-Servis dosyasında değişiklik yaptıktan sonra kullanılmalı
+Servis dosyasını başlangıçta çalışacak şekilde ayarla ve başlat
 ```bash
 sudo systemctl daemon-reload
+sudo systemctl enable 4g_connect.service
+sudo systemctl start 4g_connect.service
 ```
-Her başlangıçta servisin otomatik çalışması için
-```bash
-sudo systemctl enable 4g_dongle_auto.service
-```
-Başlangıçta otomatik çalıştırmayı kapatmak için
-```bash
-sudo systemctl disable 4g_dongle_auto.service
-```
-Servisi şu an başlatmak için
-```bash
-sudo systemctl start 4g_dongle_auto.service
-```
-Servisi durdurmak için
-```bash
-sudo systemctl stop 4g_dongle_auto.service
-```
-Servisin durumuna bakmak için
-```bash
-sudo systemctl status 4g_dongle_auto.service
-```
-
+---
 ## Raspberry Pi - Sixfab 4G HAT - Quectel25-EUX Kurulumu
 
-### Önce Raspberry pi gücünü artırın
+### Önce Raspberry pi gücünü ayarlayın
 ```bash
 sudo nano /boot/firmware/config.txt
 ```
@@ -161,7 +115,7 @@ En sona yazın
 ```bash
 usb_max_current_enable=1
 ```
-
+---
 ```bash
 sudo rpi-eeprom-config --edit
 ```
@@ -169,15 +123,17 @@ En sona yazın
 ```bash
 PSU_MAX_CURRENT=5000
 ```
+---
+Cihazı yeniden başlatın
 ```bash
 sudo reboot
 ```
 
 ### Donanımı Hazırlayın
-4g Hat'i Raspberry Pi'a takın
-Sim Kartı Takın (Sim Kartın şifresi kapalı olmalı)
-Micro USB kablosunu takın
-Gücü açın
+1. 4g Hat'i Raspberry Pi'a takın
+2. Sim Kartı Takın (Sim Kartın şifresi kapalı olmalı)
+3. Micro USB kablosunu takın
+4. Gücü açın
 
 Cihaz görünüyor mu ve portlar oluştu mu?
 ```bash
@@ -210,7 +166,7 @@ Eğer IP alındıysa bağlantı başarılı
 
 ## Servis dosyasını oluşturalım
 ```bash
-sudo nano /etc/systemd/system/quectel-connect.service
+sudo nano /etc/systemd/system/4g_connect.service
 ```
 ```bash
 [Unit]
@@ -230,6 +186,6 @@ WantedBy=multi-user.target
 Başlangıçta çalışacak şekilde ayarlayalım ve başlatalım
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable quectel-connect.service
-sudo systemctl start quectel-connect.service
+sudo systemctl enable 4g_connect.service
+sudo systemctl start 4g_connect.service
 ```
