@@ -105,30 +105,7 @@ sudo systemctl start 4g_connect.service
 ```
 ---
 ## Raspberry Pi - Sixfab 4G HAT - Quectel25-EUX Kurulumu
-
-### Önce Raspberry pi gücünü ayarlayın
-```bash
-sudo nano /boot/firmware/config.txt
 ```
-
-En sona yazın
-```bash
-usb_max_current_enable=1
-```
----
-```bash
-sudo rpi-eeprom-config --edit
-```
-En sona yazın
-```bash
-PSU_MAX_CURRENT=5000
-```
----
-Cihazı yeniden başlatın
-```bash
-sudo reboot
-```
-
 ### Donanımı Hazırlayın
 1. 4g Hat'i Raspberry Pi'a takın
 2. Sim Kartı Takın (Sim Kartın şifresi kapalı olmalı)
