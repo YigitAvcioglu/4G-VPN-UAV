@@ -1,8 +1,8 @@
-# WireGuard Kurulum ve Yapılandırma Rehberi
+# WireGuard Setup and Configuration Guide
 
-## Sunucu Kurulumu
+## Server Setup
 
-### WireGuard Kurulumu
+### WireGuard Installation
 
 ```bash
 sudo apt install wireguard -y
@@ -12,7 +12,7 @@ chmod +x wireguard-install.sh
 sudo ./wireguard-install.sh
 ```
 
-Kurulum sırasında aşağıdaki bilgileri girin:
+Enter the following information during the installation prompt:
 
 ```text
 IPv4 or IPv6 Public IP address: [Static_IP_Address]
@@ -26,15 +26,15 @@ Client WireGuard IPv4: 10.8.0.x  (örn 10.8.0.2, 10.8.0.5...)
 
 ---
 
-## Sunucu Yapılandırması
+## Server Configuration
 
-WireGuard yapılandırma dosyasını açın:
+Open the WireGuard configuration file:
 
 ```bash
 sudo nano /etc/wireguard/wg0.conf
 ```
 
-### `[Interface]` Bölümüne Ekleyin
+### Add to the [Interface] Section
 
 ```ini
 PostUp = iptables -I INPUT -p udp --dport 51820 -j ACCEPT; iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -i enp3s0 -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o enp3s0 -j MASQUERADE
@@ -42,35 +42,35 @@ PostUp = iptables -I INPUT -p udp --dport 51820 -j ACCEPT; iptables -A FORWARD -
 PostDown = iptables -D INPUT -p udp --dport 51820 -j ACCEPT; iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -i enp3s0 -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o enp3s0 -j MASQUERADE
 ```
 > [!WARNING]
-> `enp3s0` ethernet arayüzü adınızı kendi sisteminize göre değiştirin.
+> Replace the Ethernet interface name `enp3s0` according to your own system.
 
-### `[Peer]` Bölümüne Ekleyin
+### Add to the [Peer] Section
 
 ```ini
 AllowedIPs = 10.8.0.x/32
 ```
 > [!WARNING]
->  10.8.0.x: o istemciye atanmış olan IP adresi
+>  10.8.0.x: The specific IP address assigned to that client.
 
 ---
 
-## İstemci (Jetson / Raspberry Pi) Kurulumu
+## Client (Jetson / Raspberry Pi) Setup
 
-### WireGuard Kurulumu
+### WireGuard Installation
 
 ```bash
 sudo apt install wireguard wireguard-tools -y
 ```
 
-### İstemci Konfigürasyonu
+### Client Configuration
 
-Sunucuda oluşturulan istemci `.conf` dosyasını istemciye kopyalayın ve aşağıdaki dosyaya kaydedin:
+Copy the client .conf file generated on the server over to the client and save it to the following path:
 
 ```bash
 sudo nano /etc/wireguard/client.conf
 ```
 
-Aşağıdaki ayarları kontrol edin:
+Verify the following parameters:
 
 ```ini
 Endpoint = [Static_IP_Address]:51820
@@ -79,57 +79,36 @@ AllowedIPs = 10.8.0.0/24
 
 PersistentKeepalive = 25
 ```
-Eğer WireGuard kurulu olmayan ancak aynı router'a Ethernet ile bağlı olan bilgisayarlarla(YKİ bilgisayarı gibi) uzaktaki wireguard istemcilerine(Jetson/Raspberry Pi) erişmek istiyorsanız `192.168.1.0/24` ağını ekleyebilirsiniz.
-> [!WARNING]
->  Ancak bu eklemeden sonra istemci cihazlara(Jetson/Raspberry Pi) ethernet ile SSH atılamaz.
+If you want to access the remote WireGuard clients (such as the Jetson/Raspberry Pi) from computers without WireGuard installed that are connected via Ethernet to the same router (e.g., GCS PC), you can add the 192.168.10.0/24 network.
 
----
+## Router Settings
 
-## WireGuard Kurulu Olmayan PC İçin
+Port Forwarding configuration:
 
-Windows üzerinde statik rota eklemek için(Bu komutu girmeden önce cmd'yi yönetici olarak çalıştırın)
-```cmd
-route -p ADD 10.8.0.0 MASK 255.255.255.0 192.168.1.x
-```
-Windows üzerinde statik rota eklemek için:
-```cmd
-sudo ip route add 10.8.0.0/24 via 192.168.1.x
-```
-> [!WARNING]
-> 192.168.1.x(Wireguard Sunucu PC IP)
-> > [!WARNING]
-> Firewall'u devre dışı bırakın.
-
----
-
-## Router Ayarları
-
-Port yönlendirme (Port Forwarding) yapılandırması:
-
-| Ayar | Değer |
+| Setting | Value |
 |--------|--------|
-| Hedef IP | 192.168.1.x (WireGuard sunucusunun LAN IP adresi) |
-| Protokol | UDP |
+| Destination IP | 192.168.1.x (LAN IP address of the WireGuard server) |
+| Protocol | UDP |
 | Internal Port | 51820 |
 | External Port | 51820 |
 
 ---
 
-## Bağlantıyı Başlatma
+## Starting the Connection
 
-### Sunucu
+### Server
 
 ```bash
 sudo wg-quick up wg0
 ```
 
-### İstemci
+### Client
 
 ```bash
 sudo wg-quick up client
 ```
 
-### Durum Kontrolü
+### Status Check
 
 ```bash
 sudo wg show
