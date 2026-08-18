@@ -12,8 +12,11 @@ Furthermore, other devices on the local network connected to the WireGuard serve
 ---
 https://github.com/user-attachments/assets/91979a94-be5c-4602-8060-16c8fb7bc293
 
+https://github.com/user-attachments/assets/89637300-7bd6-436e-818e-83757404799f
+
+
 ---
-## Quick NAvigation
+## Quick Navigation
 
 You can jump directly to the relevant guide using the links below:
 
