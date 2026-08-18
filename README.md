@@ -1,23 +1,27 @@
-# 4G & Wireguard Kurulum ve Yönetim Rehberi
 
-4G LTE tabanlı bu haberleşme mimarisi, İHA ile yer kontrol istasyonu arasındaki mesafe kısıtını ortadan kaldırarak farklı fiziksel ağlarda bulunan sistemlerin WireGuard VPN üzerinden aynı sanal ağ içerisinde haberleşmesini sağlar.
-Bu haberleşme mimarisinde yer istasyonunda bulunan router, statik IP adresine sahip olup internet üzerinden erişilebilen tek noktayı oluşturur. İHA üzerindeki görev bilgisayarı(Jetson/Raspberry Pi), 4G modem/HAT üzerindeki sim kart aracılığıyla internete çıkarak WireGuard client bağlantısını bu statik IP adresine yönlendirir. Dış ağdan router'a ulaşan WireGuard trafiği, port yönlendirme (port forwarding) kuralları sayesinde yerel ağdaki WireGuard sunucusu olarak çalışan bilgisayara iletilir. Böylece CGNAT kaynaklı erişim kısıtlamaları aşılır ve İHA ile yer istasyonu arasında güvenli bir VPN tüneli oluşturulur. Tünelin kurulmasının ardından her iki sistem de aynı sanal ağ içerisinde yer alır ve internet üzerinden haberleşmelerine rağmen birbirleriyle yerel ağdaymış gibi doğrudan, güvenli ve kesintisiz şekilde veri alışverişi yapabilir.
-WireGuard sunucusuna bağlı olan yerel ağdaki diğer cihazlar(YKİ PC gibi) ise üzerinde WireGuard kurulu olmasa dahi, routerın yönlendirme ve ağ geçidi yapılandırmaları sayesinde VPN ağına erişebilir ve İHA üzerindeki clientlar ile doğrudan haberleşebilir. Bu sayede yerel ağdaki bilgisayarlar ile İHA arasında telemetri ve görüntü aktarımı işlemleri gerçekleştirilebilir.
+
+
+# 4G & WireGuard Setup and Management Guide
+
+This 4G LTE-based communication architecture eliminates the range limitation between the UAV (Unmanned Aerial Vehicle) and the Ground Control Station (GCS), enabling systems located on different physical networks to communicate within the same virtual network via WireGuard VPN.
+
+In this communication architecture, the router located at the ground station has a static IP address, serving as the single access point reachable over the internet. The mission computer on the UAV (Jetson / Raspberry Pi) accesses the internet via the SIM card on the 4G modem/HAT and directs the WireGuard client connection to this static IP address. The incoming WireGuard traffic reaching the router from the external network is forwarded to the computer acting as the WireGuard server on the local network via port forwarding rules. In this way, CGNAT-related access restrictions are bypassed, and a VPN tunnel is established between the UAV and the ground station. Once the tunnel is established, both systems reside within the same virtual network; despite communicating over the public internet, they can exchange data directly, securely (encrypted), and seamlessly as if they were on the same local network.
+
+Furthermore, other devices on the local network connected to the WireGuard server (such as the GCS PC) can access the VPN network and communicate directly with the clients on the UAV—even if WireGuard is not installed on them—thanks to the router's routing and gateway configurations. This enables telemetry and video transmission between computers on the local network and the UAV.
+
 ---
-
----<img width="1646" height="1712" alt="RPI_4G_Topology drawio" src="https://github.com/user-attachments/assets/78437a71-6bde-4fca-a026-eba64bb0cb41" />
-<img width="1646" height="1712" alt="4G_Topology drawio" src="https://github.com/user-attachments/assets/e4148b1a-7094-4cf7-a5df-82fba8b955b7" />
+https://github.com/user-attachments/assets/91979a94-be5c-4602-8060-16c8fb7bc293
 
 ---
-## 🗺️ Hızlı Navigasyon
+## Quick NAvigation
 
-Aşağıdaki kartları kullanarak gitmek istediğiniz rehbere doğrudan geçiş yapabilirsiniz:
+You can jump directly to the relevant guide using the links below:
 
-| Bölüm | Bağlantı |
+| Section | Link |
 | :--- | :--- |
-|Jetson Orin Nano/NX - Sim7600G-H 4G Dongle ve Raspberry Pi 5 - Sixfab 4G Hat Kurulumu | [Görüntüle ➔](./4g-kurulumu/README.md) |
-|Wireguard VPN Server ve Client Konfigürasyonları | [Görüntüle ➔](./wireguard-kurulumu/README.md) |
-|Genel Kullanım ve Sorun Giderme İçin Önemli Komutlar | [Görüntüle ➔](./komutlar/README.md) |
+|Jetson Orin Nano/NX - Sim7600G-H 4G Dongle and Raspberry Pi 5 - Sixfab 4G Hat Setup | [View ➔](./4g-kurulumu/README.md) |
+|Wireguard VPN Server ve Client Configurations | [View ➔](./wireguard-kurulumu/README.md) |
+|Essential Commands for General Usage and Troubleshooting | [View ➔](./komutlar/README.md) |
 
 
 
